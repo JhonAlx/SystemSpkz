@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
-        Title="System Specs" Background="#252525" Foreground="#576572" SizeToContent="WidthAndHeight" IsMaxRestoreButtonEnabled="False">
+        Title="System Specs" Background="#252525" Foreground="#576572" SizeToContent="WidthAndHeight" IsMaxRestoreButtonEnabled="False" ResizeMode="NoResize">
     <controls:MetroWindow.Resources>
         <Style TargetType="GroupBox">
             <Setter Property="BorderBrush" Value="Gray"/>
@@ -22,7 +22,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
-            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="180"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid Column="0" Name="DataWrapper" Background="#252525">
             <GroupBox x:Name="GroupBox" Header="Summary" Margin="10">
@@ -244,6 +244,9 @@
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid Row="0">
                     <Button Name="CreatePngImageButton" Content="Create PNG Image" Height="50" Width="Auto" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource SquareButtonStyle}" Click="CreatePngImageButton_Click" />
@@ -252,10 +255,10 @@
                     <Button Name="UploadImageButton"  Content="Upload Image" Height="Auto" Width="Auto" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource SquareButtonStyle}" Click="UploadImageButton_Click" />
                 </Grid>
                 <Grid Row="2">
-                    <Button Name="CopySpecsButton" Content="Copy Specs As Text" Height="Auto" Width="Auto" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource SquareButtonStyle}" />
+                    <Button Name="CopySpecsButton" Content="Copy Specs As Text" Height="Auto" Width="Auto" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource SquareButtonStyle}" Click="CopySpecsButton_Click" />
                 </Grid>
                 <Grid Row="3">
-                    <Button Name="TwitterShareButton" Content="Tweet Your System " Height="Auto" Width="Auto" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource SquareButtonStyle}" />
+                    <Button Name="TwitterShareButton" Content="Tweet Your System " Height="Auto" Width="Auto" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource SquareButtonStyle}" Click="TwitterShareButton_Click" />
                 </Grid>
                 <Grid Row="4">
                     <Button Name="FacebookShareButton" Content="Share To Facebook" Height="Auto" Width="Auto" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource SquareButtonStyle}" />
@@ -266,6 +269,25 @@
                 <Grid Row="6">
                     <ProgressBar Name="GeneralProgressBar" IsIndeterminate="True"/>
                 </Grid>
+                <Grid Name="ImgurDataGrid" Grid.Row="7">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Label Name="ImgurUrlLbl" Content="Your image URL:" HorizontalAlignment="Center"/>
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <TextBox Name="ImgurUrlTxtBx" IsReadOnly="True" />
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <Button Name="DismissImgurBtn" Content="Dismiss" Height="Auto" Width="Auto" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource SquareButtonStyle}" Click="DismissImgurBtn_Click"/>
+                    </Grid>
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="1">
+                <TextBlock Name="ClipboardContentTxtBlck" Visibility="Hidden" Width="0" Height="0"/>
             </Grid>
         </Grid>
     </Grid>
