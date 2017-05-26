@@ -36,7 +36,6 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
                     <Grid Row="0">
                         <Grid.RowDefinitions>
@@ -261,15 +260,12 @@
                     <Button Name="TwitterShareButton" Content="Tweet Your System " Height="Auto" Width="Auto" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource SquareButtonStyle}" Click="TwitterShareButton_Click" />
                 </Grid>
                 <Grid Row="4">
-                    <Button Name="FacebookShareButton" Content="Share To Facebook" Height="Auto" Width="Auto" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{DynamicResource SquareButtonStyle}" />
-                </Grid>
-                <Grid Row="5">
                     <Label Name="ProgressLabel" Content="Text here" HorizontalAlignment="Center"/>
                 </Grid>
-                <Grid Row="6">
+                <Grid Row="5">
                     <ProgressBar Name="GeneralProgressBar" IsIndeterminate="True"/>
                 </Grid>
-                <Grid Name="ImgurDataGrid" Grid.Row="7">
+                <Grid Name="ImgurDataGrid" Grid.Row="6">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
