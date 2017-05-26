@@ -23,9 +23,14 @@ namespace SystemSpkz
     /// </summary>
     public partial class MainWindow
     {
+        //Variables to be used on system architecture detection
         private const string Bits64 = "64-bit";
         private const string Bits32 = "32-bit";
 
+        /**
+         * Variable to save Imgur's URL if an image has been uploaded already to save HTTP calls 
+         * and avoid captcha pages
+         **/
         private string _imgurUrl;
 
         public MainWindow()
@@ -37,6 +42,16 @@ namespace SystemSpkz
             GeneralProgressBar.Visibility = Visibility.Hidden;
             ImgurDataGrid.Visibility = Visibility.Hidden;
 
+            GetSpecs();
+
+            ClipboardContentTxtBlck.Text = GenerateSpecsText();
+        }
+
+        /// <summary>
+        /// Fills labels with info from methods
+        /// </summary>
+        private void GetSpecs()
+        {
             OsInfoLabel.Content = GetOsInfo();
             CpuInfoLabel.Content = GetCpuInfo();
             RamInfoLabel.Content = ProcessInfoList(GetMemoryInfo());
@@ -46,15 +61,22 @@ namespace SystemSpkz
             OpticalInfoLabel.Content = ProcessInfoList(GetOpticalDrivesInfo());
             AudioInfoLabel.Content = ProcessInfoList(GetAudioInfo());
             NetworkInfoLabel.Content = ProcessInfoList(GetNetworkInfo());
-
-            ClipboardContentTxtBlck.Text = GenerateSpecsText();
         }
 
+        /// <summary>
+        /// Returns a ManagementObjectCollection object containing a WMI info instance from the supplied id
+        /// </summary>
+        /// <param name="id">WMI class name</param>
+        /// <returns>Returns an instance of supplied WMI class</returns>
         public ManagementObjectCollection GetManagementClassProperties(string id)
         {
             return new ManagementClass(id).GetInstances();
         }
 
+        /// <summary>
+        /// Builds a string to populate ClipboardContentTxtBlck content to be copied to the clipboard when the user clicks CopySpecsButton
+        /// </summary>
+        /// <returns>A formatted string with PC specs info</returns>
         private string GenerateSpecsText()
         {
             var sb = new StringBuilder();
@@ -98,28 +120,52 @@ namespace SystemSpkz
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Formats a string as an item on a list
+        /// </summary>
+        /// <param name="s">Data string to include</param>
+        /// <param name="sb">Current StringBuilder containing PC specs info</param>
         private void ProcessItem(string s, ref StringBuilder sb)
         {
             sb.AppendFormat($"\t- {s}\n");
         }
 
+        /// <summary>
+        /// Formats a list object into a list text 
+        /// </summary>
+        /// <param name="list">Data list to include</param>
+        /// <param name="sb">Current StringBuilder containing PC specs info</param>
         private void ItemizeList(List<string> list, ref StringBuilder sb)
         {
             foreach (var s in list)
                 ProcessItem(s, ref sb);
         }
 
+        /// <summary>
+        /// Cleans up a string from unwanted characters ny trimming it
+        /// </summary>
+        /// <param name="info">String to be cleaned up</param>
+        /// <returns>Returns a clean string</returns>
         private string CleanUpInfoString(string info)
         {
             return info
                 .TrimEnd();
         }
 
+        /// <summary>
+        /// Formats a list into several lines
+        /// </summary>
+        /// <param name="info">String list containing a component specs</param>
+        /// <returns>Returns a formatted string</returns>
         private string ProcessInfoList(List<string> info)
         {
             return CleanUpInfoString(string.Join(Environment.NewLine, info));
         }
 
+        /// <summary>
+        /// Gets info about network devices used in the computer
+        /// </summary>
+        /// <returns>Returns a list of networking devices</returns>
         private List<string> GetNetworkInfo()
         {
             var info = new List<string>();
@@ -132,6 +178,10 @@ namespace SystemSpkz
             return info;
         }
 
+        /// <summary>
+        /// Gets info about audio devices used in the computer
+        /// </summary>
+        /// <returns>Returns a list of audio devices</returns>
         private List<string> GetAudioInfo()
         {
             var info = new List<string>();
@@ -142,6 +192,10 @@ namespace SystemSpkz
             return info;
         }
 
+        /// <summary>
+        /// Gets info about optical drives used in the computer
+        /// </summary>
+        /// <returns>Returns a list of optical drives</returns>
         private List<string> GetOpticalDrivesInfo()
         {
             var info = new List<string>();
@@ -152,6 +206,10 @@ namespace SystemSpkz
             return info;
         }
 
+        /// <summary>
+        /// Gets info about storage units used in the computer
+        /// </summary>
+        /// <returns>Returns a list of storage units</returns>
         private List<string> GetStorageInfo()
         {
             var info = new List<string>();
@@ -165,6 +223,10 @@ namespace SystemSpkz
             return info;
         }
 
+        /// <summary>
+        /// Gets info about GPU(s) used in the computer
+        /// </summary>
+        /// <returns>Returns a list of GPUs</returns>
         private List<string> GetVideoInfo()
         {
             var info = new List<string>();
@@ -178,6 +240,10 @@ namespace SystemSpkz
             return info;
         }
 
+        /// <summary>
+        /// Gets info about computer's motherboard
+        /// </summary>
+        /// <returns>Returns motherboard's info</returns>
         private string GetMoBoInfo()
         {
             var cpuSocket = string.Empty;
@@ -192,6 +258,10 @@ namespace SystemSpkz
             return CleanUpInfoString(info);
         }
 
+        /// <summary>
+        /// Gets info about RAM sticks used in the computer
+        /// </summary>
+        /// <returns>Returns a list of RAM sticks</returns>
         private List<string> GetMemoryInfo()
         {
             var info = new List<string>();
@@ -203,6 +273,10 @@ namespace SystemSpkz
             return info;
         }
 
+        /// <summary>
+        /// Gets info about computer's CPU
+        /// </summary>
+        /// <returns>Returns CPU's info</returns>
         private string GetCpuInfo()
         {
             var info = string.Empty;
@@ -213,6 +287,10 @@ namespace SystemSpkz
             return CleanUpInfoString(info);
         }
 
+        /// <summary>
+        /// Gets info about computer's OS
+        /// </summary>
+        /// <returns>Returns OS' info</returns>
         private string GetOsInfo()
         {
             var info = string.Empty;
@@ -226,15 +304,24 @@ namespace SystemSpkz
             return CleanUpInfoString(info);
         }
 
+        /// <summary>
+        /// CreatePngImageButton_Click event handler
+        /// </summary>
         private void CreatePngImageButton_Click(object sender, RoutedEventArgs e)
         {
             CreateImage(false);
         }
 
+        /// <summary>
+        /// Create an image based on DataWrapper's grid content.
+        /// </summary>
+        /// <param name="isTempImg">Sets if the image will be temporary (for Imgur/social uploads).</param>
+        /// <returns>Returns image's path</returns>
         private string CreateImage(bool isTempImg)
         {
             var path = string.Empty;
 
+            //If isTempImg == false then show an open file dialog and set the path to user's selected path
             if (!isTempImg)
             {
                 var openDialog = new SaveFileDialog
@@ -245,11 +332,13 @@ namespace SystemSpkz
                 if (openDialog.ShowDialog() == true)
                     path = openDialog.FileName;
             }
+            //Otherwise set the name to temp.png and path to app current directory
             else
             {
                 path = Path.Combine(Environment.CurrentDirectory, "temp.png");
             }
 
+            //Generate the image
             if (!string.IsNullOrEmpty(path))
             {
                 var height = (int) DataWrapper.ActualHeight;
@@ -270,13 +359,22 @@ namespace SystemSpkz
             return path;
         }
 
+        /// <summary>
+        /// UploadImageButton_Click event handler.
+        /// </summary>
         private async void UploadImageButton_Click(object sender, RoutedEventArgs e)
         {
             await UploadImage(false);
         }
 
+        /// <summary>
+        /// Upload image to Imgur.
+        /// </summary>
+        /// <param name="isSocial">Sets if the string is for a social network post.</param>
+        /// <returns>A Task object to be used in async methods</returns>
         private async Task UploadImage(bool isSocial)
         {
+            //If string.IsNullOrEmpty(_imgurUrl) == true it means that user hasn't uploaded any images while current program's execution
             if (string.IsNullOrEmpty(_imgurUrl))
             {
                 var cookies = GetCookies();
@@ -288,14 +386,17 @@ namespace SystemSpkz
                 ProgressLabel.Visibility = Visibility.Visible;
                 GeneralProgressBar.Visibility = Visibility.Visible;
 
+                //Check if imgur asks for captcha first
                 if (!checkCaptcha(cookies, ref imgurData, ref errorMessage))
                 {
                     MessageBox.Show(errorMessage, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 else
                 {
+                    //We have an OK and album data from imgur to upload images
                     if (imgurData.Success)
                     {
+                        //Generate image
                         ProgressLabel.Content = "Generating image";
                         var file = new FileInfo(CreateImage(true));
 
@@ -303,6 +404,7 @@ namespace SystemSpkz
                         {
                             ProgressLabel.Content = "Uploading image";
 
+                            //Upload image using as a multipart form
                             var task = Task.Factory.StartNew(() =>
                             {
                                 using (var fs = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
@@ -335,14 +437,17 @@ namespace SystemSpkz
                                 }
                             });
 
+                            //Wait for task completion
                             await task;
 
+                            //If it isn't for a social site, show a textbox to allow the user to copy imgur's URL
                             if (!isSocial)
                             {
                                 ImgurDataGrid.Visibility = Visibility.Visible;
                                 ImgurUrlTxtBx.Text = $"http://imgur.com/{imgurImageData.Data.Hash}";
                                 _imgurUrl = ImgurUrlTxtBx.Text;
                             }
+                            //Otherwise store it for future use (to avoid unneeded HTTP calls)
                             else
                             {
                                 ImgurUrlTxtBx.Text = $"http://imgur.com/{imgurImageData.Data.Hash}";
@@ -368,11 +473,16 @@ namespace SystemSpkz
             }
             else
             {
+                //Just show a textbox to allow the user to copy imgur's URL
                 if (!isSocial)
                     ImgurDataGrid.Visibility = Visibility.Visible;
             }
         }
 
+        /// <summary>
+        /// Generate a pair of cookies based on http://s.imgur.com/include/js/jafo.js cookie generation's procedure reverse engineering
+        /// </summary>
+        /// <returns></returns>
         private CookieContainer GetCookies()
         {
             var cookie1 = new Cookie();
@@ -398,7 +508,12 @@ namespace SystemSpkz
             return cookies;
         }
 
-        public static long ToUnixTimestamp(DateTime target)
+        /// <summary>
+        /// Convert a datetime to UNIX timestamp
+        /// </summary>
+        /// <param name="target">Target datetime</param>
+        /// <returns>Returns a UNIX timestamp</returns>
+        public long ToUnixTimestamp(DateTime target)
         {
             var date = new DateTime(1970, 1, 1, 0, 0, 0, target.Kind);
             var unixTimestamp = ToInt64((target - date).TotalSeconds);
@@ -406,6 +521,10 @@ namespace SystemSpkz
             return unixTimestamp;
         }
 
+        /// <summary>
+        /// Computes a SHA256 hash with a JS navigator object info
+        /// </summary>
+        /// <returns>SHA 256 hash of navigator info</returns>
         private string GetCookieHash()
         {
             var sb = new StringBuilder();
@@ -424,6 +543,13 @@ namespace SystemSpkz
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Connects imgur's upload/checkcaptcha endpoint to check if a captcha has to be solved before uploading an image, will return false if a captcha has to be solved or if any exceptions ocurred 
+        /// </summary>
+        /// <param name="cookies">Cookies needed to complete the request</param>
+        /// <param name="imgurData">Imgur album data to be collected from the endpoint if no captcha is required</param>
+        /// <param name="errorMessage">Error message to be reported to the user if any exceptions were thrown</param>
+        /// <returns></returns>
         private bool checkCaptcha(CookieContainer cookies, ref ImgurAlbumData imgurData, ref string errorMessage)
         {
             const string captchaUrl = "http://imgur.com/upload/checkcaptcha";
@@ -508,16 +634,23 @@ namespace SystemSpkz
 
             if (data == null)
                 return false;
+
             imgurData = data;
 
             return imgurData.Success;
         }
 
+        /// <summary>
+        /// DismissImgurBtn_Click event handler.
+        /// </summary>
         private void DismissImgurBtn_Click(object sender, RoutedEventArgs e)
         {
             ImgurDataGrid.Visibility = Visibility.Hidden;
         }
 
+        /// <summary>
+        /// CopySpecsButton_Click event handler.
+        /// </summary>
         private void CopySpecsButton_Click(object sender, RoutedEventArgs e)
         {
             Clipboard.SetText(ClipboardContentTxtBlck.Text);
@@ -525,6 +658,9 @@ namespace SystemSpkz
                 MessageBoxImage.Information);
         }
 
+        /// <summary>
+        /// TwitterShareButton_Click event handler.
+        /// </summary>
         private async void TwitterShareButton_Click(object sender, RoutedEventArgs e)
         {
             await UploadImage(true);
@@ -535,6 +671,9 @@ namespace SystemSpkz
         }
     }
 
+    /// <summary>
+    /// Auxiliary class
+    /// </summary>
     public class AlbumData
     {
         [JsonProperty("overlimits")]
@@ -550,6 +689,9 @@ namespace SystemSpkz
         public string DeleteHash { get; set; }
     }
 
+    /// <summary>
+    /// Auxiliary class
+    /// </summary>
     public class ImgurAlbumData
     {
         [JsonProperty("data")]
@@ -562,6 +704,9 @@ namespace SystemSpkz
         public int Status { get; set; }
     }
 
+    /// <summary>
+    /// Auxiliary class
+    /// </summary>
     public class ImageData
     {
         [JsonProperty("hashes")]
@@ -598,6 +743,9 @@ namespace SystemSpkz
         public string Msid { get; set; }
     }
 
+    /// <summary>
+    /// Auxiliary class
+    /// </summary>
     public class ImgurImageData
     {
         [JsonProperty("data")]

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
-        Title="System Specs" Background="#252525" Foreground="#576572" SizeToContent="WidthAndHeight" IsMaxRestoreButtonEnabled="False" ResizeMode="NoResize">
+        Title="System Specs" Background="#252525" Foreground="#576572" SizeToContent="WidthAndHeight" IsMaxRestoreButtonEnabled="False" ResizeMode="NoResize" Icon="logo-light.ico">
     <controls:MetroWindow.Resources>
         <Style TargetType="GroupBox">
             <Setter Property="BorderBrush" Value="Gray"/>
@@ -28,6 +28,7 @@
             <GroupBox x:Name="GroupBox" Header="Summary" Margin="10">
                 <Grid>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
@@ -236,7 +237,6 @@
             </Grid.RowDefinitions>
             <Grid Row="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
